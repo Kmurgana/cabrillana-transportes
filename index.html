@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang='es'>
+
+<head>
+  <meta charset='UTF-8'>
+  <meta name='viewport' content='width=device-width, initial-scale=1'>
+  <title>Cabrillana de Marco Jorge Alejandro - Servicios de Transporte</title>
+  <link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css'>
+  <style>
+    h2 {
+      text-align: center;
+    }
+
+    section {
+      margin-bottom: 1rem;
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <nav class='container-fluid'>
+      <ul>
+        <h2>
+          <li><strong>    Cabrillana Transportes</strong></li>
+        </h2>
+      </ul>
+      <ul>
+        <li><a href='#'>Inicio</a></li>
+        <li><a href='#cargar'>Cargar Artículos</a></li>
+        <li><a href='#historial'>Historial</a></li>
+      </ul>
+    </nav>
+  </header>
+  <main class='container'>
+    <div class='grid'>
+      <section>
+        <hgroup>
+          <h2>Carga de Artículos de Vehículos</h2>
+          <h3>Gestión eficiente de transporte</h3>
+        </hgroup>
+        <p>Servicios de transporte de pasajeros, alquiler de autos con chofer, y más.</p>
+        <figure><img
+            src='https://images.pexels.com/photos/1521580/pexels-photo-1521580.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500'
+            alt='Taxi y Remise en la Ciudad' style='width: 100%; max-width: 600px; height: auto;' />
+          <figcaption><a
+              href='https://images.pexels.com/photos/1521580/pexels-photo-1521580.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=1&amp;w=500'
+              target='_blank'>Ver imagen completa</a></figcaption>
+        </figure>
+        <h3>¿Cómo empezar?</h3>
+        <p>Haz clic en 'Cargar Artículos' para comenzar.</p>
+        <h3>Contacto</h3>
+        <p>Para asistencia, visita la sección de Soporte.</p>
+      </section>
+    </div>
+    <section id='cargar' class='container'>
+      <article>
+        <hgroup>
+          <h2>Cargar Artículos</h2>
+          <h3>Ingrese los detalles del artículo</h3>
+        </hgroup>
+        <form id='articuloForm'><label for='vehiculo'>Vehículo:</label><select id='vehiculo' name='vehiculo'>
+            <option value='taxi'>Taxi</option>
+            <option value='remis'>Remís</option>
+          </select><label for='nombreArticulo'>Nombre del Artículo:</label><input type='text' id='nombreArticulo'
+            name='nombreArticulo' required><label for='cantidad'>Cantidad:</label><input type='number' id='cantidad'
+            name='cantidad' required><label for='peso'>Peso (kg):</label><input type='number' id='peso' name='peso'
+            required><label for='dimensiones'>Dimensiones (cm):</label><input type='text' id='dimensiones'
+            name='dimensiones' placeholder='Largo x Ancho x Alto' required><label for='fragilidad'>Frágil:</label><input
+            type='checkbox' id='fragilidad' name='fragilidad'><label for='tipoCarga'>Tipo de Carga:</label><select
+            id='tipoCarga' name='tipoCarga'>
+            <option value='regular'>Regular</option>
+            <option value='peligrosa'>Peligrosa</option>
+            <option value='refrigerada'>Refrigerada</option>
+          </select><label for='imagen'>Imagen del Artículo (opcional):</label><input type='file' id='imagen'
+            name='imagen'><button type='submit'>Añadir Artículo</button></form>
+        <hr>
+        <h3>Resumen de Artículos Cargados</h3>
+        <table id='resumenTabla'>
+          <thead>
+            <tr>
+              <th>Nombre</th>
+              <th>Cantidad</th>
+              <th>Peso</th>
+              <th>Dimensiones</th>
+              <th>Frágil</th>
+              <th>Tipo de Carga</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody id='resumenBody'></tbody>
+        </table><button id='confirmarCarga'>Confirmar Carga</button>
+      </article>
+    </section>
+    <section id='historial' class='container'>
+      <hgroup>
+        <h2>Historial de Cargas</h2>
+        <h3>Registros de cargas pasadas</h3>
+      </hgroup>
+      <table id='historialTabla'>
+        <thead>
+          <tr>
+            <th>Fecha</th>
+            <th>Vehículo</th>
+            <th>Número de Artículos</th>
+            <th>Peso Total</th>
+            <th>Estado</th>
+          </tr>
+        </thead>
+        <tbody id='historialBody'></tbody>
+      </table><button id='exportarCSV'>Exportar CSV</button> <button id='exportarPDF'>Exportar PDF</button>
+    </section>
+    <footer class='container'><small><a href='#'>Política de privacidad</a> • <a href='#'>Términos y
+          condiciones</a></small></footer>
+    <script>document.addEventListener('DOMContentLoaded', function () {let articulos = JSON.parse(localStorage.getItem('articulos')) || []; let editIndex = -1; const form = document.getElementById('articuloForm'); const resumenBody = document.getElementById('resumenBody'); const historialBody = document.getElementById('historialBody'); const actualizarResumen = () => {resumenBody.innerHTML = ''; articulos.forEach((articulo, index) => {resumenBody.innerHTML += `<tr><td>${articulo.nombreArticulo}</td><td>${articulo.cantidad}</td><td>${articulo.peso} kg</td><td>${articulo.dimensiones}</td><td>${articulo.fragilidad ? 'Sí' : 'No'}</td><td>${articulo.tipoCarga}</td><td><button class='editar' data-index="${index}">Editar</button> <button class='eliminar' data-index="${index}">Eliminar</button></td></tr>`;}); attachEventListeners();}; const editarArticulo = (index) => {const articulo = articulos[index]; form.vehiculo.value = articulo.vehiculo; form.nombreArticulo.value = articulo.nombreArticulo; form.cantidad.value = articulo.cantidad; form.peso.value = articulo.peso; form.dimensiones.value = articulo.dimensiones; form.fragilidad.checked = articulo.fragilidad; form.tipoCarga.value = articulo.tipoCarga; editIndex = index;}; const eliminarArticulo = (index) => {articulos.splice(index, 1); localStorage.setItem('articulos', JSON.stringify(articulos)); actualizarResumen();}; const attachEventListeners = () => {document.querySelectorAll('.editar').forEach(button => button.addEventListener('click', function () {editarArticulo(this.getAttribute('data-index'));})); document.querySelectorAll('.eliminar').forEach(button => button.addEventListener('click', function () {eliminarArticulo(this.getAttribute('data-index'));}));}; form.addEventListener('submit', function (e) {e.preventDefault(); const articulo = {vehiculo: form.vehiculo.value, nombreArticulo: form.nombreArticulo.value, cantidad: form.cantidad.value, peso: form.peso.value, dimensiones: form.dimensiones.value, fragilidad: form.fragilidad.checked, tipoCarga: form.tipoCarga.value}; if (editIndex >= 0) {articulos[editIndex] = articulo; editIndex = -1;} else {articulos.push(articulo);} localStorage.setItem('articulos', JSON.stringify(articulos)); actualizarResumen(); form.reset();}); document.getElementById('confirmarCarga').addEventListener('click', function () {let historial = JSON.parse(localStorage.getItem('historial')) || []; const fecha = new Date().toLocaleDateString(); const vehiculo = articulos[0]?.vehiculo || ''; const numeroArticulos = articulos.length; const pesoTotal = articulos.reduce((total, articulo) => total + parseFloat(articulo.peso), 0); historial.push({fecha, vehiculo, numeroArticulos, pesoTotal, estado: 'Entregado'}); localStorage.setItem('historial', JSON.stringify(historial)); articulos = []; localStorage.removeItem('articulos'); actualizarResumen(); actualizarHistorial();}); const actualizarHistorial = () => {historialBody.innerHTML = ''; const historial = JSON.parse(localStorage.getItem('historial')) || []; historial.forEach((registro) => {historialBody.innerHTML += `<tr><td>${registro.fecha}</td><td>${registro.vehiculo}</td><td>${registro.numeroArticulos}</td><td>${registro.pesoTotal} kg</td><td>${registro.estado}</td></tr>`;});}; actualizarResumen(); actualizarHistorial();});</script>
+</body>
+
+</html>
